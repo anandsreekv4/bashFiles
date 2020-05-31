@@ -1,4 +1,3 @@
-
 # Super.cshrc
 [ -f /tools/stbflow/iot/bashrc.iot ] && source /tools/stabflow/iot/bashrc.iot;
 
@@ -6,9 +5,14 @@
 # General
 ########################################
   export HOME2=/projects/work/ansn
-  export TERM=screen-256color
+  if [ "$COLORTERM" = "gnome-terminal" ] || [ "$COLORTERM" = "xfce4-terminal" ];then
+      export TERM=xterm-256color
+  elif [ "$COLORTERM" = "rxvt-xpm" ];then
+      export TERM=rxvt-256color
+  fi  
   unset GREP_OPTIONS
   unset GREP_COLOR
+  alias vi='vim'
   alias g='gvim -geometry 1336x744'
   alias src='source ~/.bashrc'
   alias grep="grep --color=auto"
@@ -33,6 +37,11 @@
 ########################################
 # Prompt
 ########################################
+  function tab_title {
+    echo -n -e "\033]0;`pwd | rev | cut -d/ -f1,2,3 | rev`\007";
+  }
+  PROMPT_COMMAND="tab_title ; $PROMPT_COMMAND";
+
   source ~/bashGitPrompt.sh
 
 ########################################
@@ -68,8 +77,8 @@
   lmstat -a -c /proj/lic_vault/golden/lic_vault/cdslmd-aus-prod-wan/license.dat'
   alias lic_men='
   lmstat -a -c /proj/lic_vault/golden/lic_vault/mgcld-aus-prod-wan/license.dat'
-  alias gpsy='bsub -I gmake RTL_TOOL=spyglass compile SPYGLASS_GOALS=initial_rtl/lint/lint_rtl | & tee gspy.log'
-  alias gpsycdc='b128 make compile RTL_TOOL=spyglass SPYGLASS_GOALS=initial_rtl/cdc/clock_reset_integrity,initial_rtl/cdc/cdc_verify_struct | & tee gspycdc.log'
+  alias gpsy='bsub -I gmake RTL_TOOL=spyglass compile SPYGLASS_GOALS=initial_rtl/lint/lint_rtl 2>&1 | tee  gspy.log'
+  alias gpsycdc='b128 make compile RTL_TOOL=spyglass SPYGLASS_GOALS=initial_rtl/cdc/clock_reset_integrity,initial_rtl/cdc/cdc_verify_struct 2>&1 | tee  gspycdc.log'
   alias open_spy='b144i gmake RTL_TOOL=spyglass configsum.gui &'
   alias gnc='bsub -I  gmake RTL_TOOL=ncsim compile COMP64=1 |& tee gnc.log'
   alias gncf='bsub -I  gmake RTL_TOOL=ncsim compile COMP64=1 NO_CORE_RECOMPILE=1 NO_RTL_RECOMPILE=1 && rm -rf tsmc28hpm_ncsim_INCISIVE15.20.042_64/cds.lib && gmake tsmc28hpm_ncsim_INCISIVE15.20.042_64/cds.lib |& tee gnc.log'
@@ -84,6 +93,8 @@
 ########################################
 # Paths
 ########################################
+  export PATH=/tools/linux/local/bin:$PATH
+  export PATH=/tools/stabflow/iot/bin/:$PATH
   export PATH=/tools/apps/local/vim/latest/bin:$PATH
   export PATH=/projects/CYW55560/work/scripts:$PATH
   export PATH=/projects/CYW55560/work/scripts/keep_copy_script:$PATH
@@ -110,8 +121,11 @@
     g "$1.debug"; 
   }
 
+  gf() {
+    bsub -I -q normal_35 gmake file_list FILELIST_PREFIX=../design/`basename $PWD` 2>&1 |  tee gf.log;
+  }
+
   alias compare='git stash && clob && gf && keep cp && git stash apply && clob && gf && keep comp &'
-  alias gf='set wd=`pwd`; bsub -I -q normal_35 gmake file_list FILELIST_PREFIX=../design/`basename $wd` | & tee gf.log'
     # Hatchet2
   alias tessent_vis='cd /projects/CYW55560/users/ansn/Tessent_top; b128 tessent -shell  -tesvis -dof run_tessent -log logfiles/1.log -replace'
 
@@ -119,6 +133,7 @@
 # TMUX
 ########################################
   alias tma='tmux attach-session -t'
+  alias tm='tmux'
 
 ########################################
 # fzf
