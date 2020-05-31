@@ -1,0 +1,8 @@
+# Hacks
+#1. To have Esc-p feature of tcsh
+"\ep": "\M-\C-p\C-e"
+"\M-\C-p": history-search-backward
+
+" Better file completion feature
+set show-all-if-ambiguous on
+set completion-ignore-case on
