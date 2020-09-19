@@ -6,3 +6,5 @@
 " Better file completion feature
 set show-all-if-ambiguous on
 set completion-ignore-case on
+set visible-stats on
+set page-completions off
