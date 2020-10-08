@@ -60,7 +60,10 @@
   alias gl="git lol"
   alias gis="git -c color.ui=always status  | more"
   alias gid="git difftool"
-  gido()  { git difftool "$1~" "$1"; }
+  gido()  { 
+      echo git difftool "$1~" "$*";
+      git difftool "$1~" "$*";
+  }
   gidof()  { git difftool "$1~" "$1" $2; }
   mgiti() { bsub -I mgit clone wlangit@wlangit.aus.cypress.com:"$1"/"$1";}
 
@@ -93,7 +96,7 @@
   alias open_spy='b144i gmake RTL_TOOL=spyglass configsum.gui &'
   alias gnc='bsub -I  gmake RTL_TOOL=ncsim compile COMP64=1 2>&1 | tee gnc.log'
   alias gncbt='bsub -I  gmake RTL_TOOL=ncsim compile COMP64=1 STUB_BTFM=1 |& tee gnc.log'
-  alias gncf='bsub -I  gmake --debug RTL_TOOL=ncsim compile COMP64=1 NO_CORE_RECOMPILE=1 NO_RTL_RECOMPILE=1 && rm -rf tsmc28hpm_ncsim_INCISIVE15.20.042_64/cds.lib && gmake tsmc28hpm_ncsim_INCISIVE15.20.042_64/cds.lib 2>&1 | tee gnc.log'
+  alias gncf='bsub -I  gmake RTL_TOOL=ncsim compile COMP64=1 NO_CORE_RECOMPILE=1 NO_RTL_RECOMPILE=1 && rm -rf tsmc28hpm_ncsim_INCISIVE15.20.042_64/cds.lib && gmake tsmc28hpm_ncsim_INCISIVE15.20.042_64/cds.lib 2>&1 | tee gnc.log'
 alias gne='bsub -I gmake RTL_TOOL=ncsim force-elab COMP64=1 |& tee gne.log'
   alias gncf_bt='bsub -I  gmake RTL_TOOL=ncsim compile COMP64=1 NO_CORE_RECOMPILE=1 NO_RTL_RECOMPILE=1 STUB_BTFM=1 |& tee gnc.log'
   alias cverdi="b72i gmake compile RTL_TOOL=novas |& tee comp.verdi"
@@ -125,6 +128,7 @@ alias gne='bsub -I gmake RTL_TOOL=ncsim force-elab COMP64=1 |& tee gne.log'
   export g50="/projects/BCM4350/gallery_frontend" 
   export h2='/projects/CYW55560/users/ansn'
   export h2b='/projects/CYW55560'
+  export h2a0='/projects/CYW55560/CYW55560YA0/'
   export svv='/projects/BCM4350/work/anand'
   export status='/projects/BCM4350_ext/work/ansn/status'
 
@@ -221,7 +225,7 @@ export  MODELVER=questasim_10.5c_5
 ########################################
 # cr4 verdi
 ########################################
-alias overcr4='bsub -Ip gmake armcr4_top.debussy RTL_TOOL=novas WORKINGLIBNAME="armcr4_top" VSIM_VLIBS="-L CORETEXR4 -L armcr4macro -L tcm -L etmr4 -L coresight600" NOVAS_USE_LATEST=1'
+alias overcr4='bsub -Ip gmake armcr4_top.debussy RTL_TOOL=novas WORKINGLIBNAME="armcr4_top" VSIM_VLIBS="-L CORTEXR4 -L armcr4macro -L tcm -L etmr4 -L coresight600" NOVAS_USE_LATEST=1'
 alias overotp='bsub -I gmake mxs28otpc_top.debussy COMP64=1 RTL_TOOL=ncsim NCSIM_USE_LATEST=1 WORKINGLIBNAME="mxs28otpc_top" VSIM_VLIBS="-L mxambatk -L mxs28otpc_hnd_macros -L sc_8 -L mxs28otpc_macro -L mxs28otpc_otp28 -L h00_tsmc28hpl"'
 
 
@@ -235,3 +239,22 @@ alias overotp='bsub -I gmake mxs28otpc_top.debussy COMP64=1 RTL_TOOL=ncsim NCSIM
 # DVT eclipse
 ########################################
 source ~/.dvt_settings
+
+# Temp
+function cpg {
+    cp /projects/CYW54910/work/ansn/CR4_CHANGES/$1 $1;
+}
+
+# Add the git branch to commandline
+# parse_git_branch() {
+#     # Print red for meta repo - purple for normal repo
+#     if [[ -f ./.mgit ]] ; then
+#     print_color="\e[1;31m"
+#     else
+#     print_color="\e[1;35m"
+#     fi
+#     x=`mgit branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'`
+#     y="$print_color$x\e[0m"
+#     echo -ne $y
+# }
+# export PS1="\h:\w\$(parse_git_branch) $ "

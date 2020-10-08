@@ -5,6 +5,8 @@
 #          report along with other usefule info like history, pwd, `date`, shell
 ################################################################################
 
+export TZ=Asia/Calcutta
+
 # Declare colours and TimeZone
     red="\[\033[1;31m\]"
   green="\[\033[0;32m\]"
@@ -14,7 +16,18 @@ magenta="\[\033[1;35m\]"
    cyan="\[\033[1;36m\]"
   white="\[\033[0;37m\]"
     end="\[\033[0m\]" # This is needed at the end... :(
-export TZ=Asia/Calcutta
+unset red green yellow blue magenta cyan white end
+
+bold="\001$(tput bold)\002"
+dim="\001$(tput dim)\002"
+red="\001$(tput setaf  1)\002"
+green="\001$(tput setaf  2)\002"
+yellow="\001$(tput setaf  3)\002"
+blue="\001$(tput setaf  4)\002"
+magenta="\001$(tput setaf  5)\002"
+cyan="\001$(tput setaf  6)\002"
+white="\001$(tput setaf  7)\002"
+end="\001$(tput sgr0)\002" # This is needed at the end... :(
 
 # First cut
 #function parse_git_dirty {
@@ -29,7 +42,7 @@ export TZ=Asia/Calcutta
 #  fi
 #}
 #
-#export PS1="${yellow}!\!: ${red}[ ${blue}\w ${red}] ${red}[${end}\D{%u,%D},\A|\s|\u@\h${red}]${yellow}\n$(parse_git_branch)$ ${end}"
+#export PS1="${yellow}\n!\!: ${red}[ ${blue}\w ${red}] ${red}[${end}\D{%u,%D},\A|\s|\u@\h${red}]${yellow}\n$(parse_git_branch)$ ${end}"
 
 git_branch() {
     # -- Finds and outputs the current branch name by parsing the list of
@@ -71,15 +84,16 @@ git_color() {
     local dirty=$([[ $1 =~ [!\?] ]] && echo yes)
     local needs_push=$([[ $1 =~ P ]] && echo yes)
     if [[ -n $staged ]] && [[ -n $dirty ]]; then
-        echo -e '\033[1;33m'  # bold yellow
+        # echo -e '\033[1;33m'  # bold yellow
+        echo -e "$yellow"  # bold yellow
     elif [[ -n $staged ]]; then
-        echo -e '\033[1;32m'  # bold green
+        echo -e "$green"  # bold green
     elif [[ -n $dirty ]]; then
-        echo -e '\033[1;31m'  # bold red
+        echo -e "$red"  # bold red
     elif [[ -n $needs_push ]]; then
-        echo -e '\033[1;34m' # bold blue
+        echo -e "$blue" # bold blue
     else
-        echo -e '\033[1;37m'  # bold white
+        echo -e "$white"  # bold white
     fi
 }
 
@@ -93,9 +107,10 @@ git_prompt() {
         local color=$(git_color $state)
         # Now output the actual code to insert the branch and status
         #echo -e "\x01$color\x02[$branch$state]\x01\033[00m\x02"  # last bit resets color
-        echo -e "$color[$branch$state]"  # last bit resets color
+        echo -e "$color($branch$state)"  # last bit resets color
     fi
 }
 
 #PS1="$yellow!\!:$red [$blue\w$red] $red[$end\D{%u,%D},\A|\s|\u@\h$red]$yellow\n$ $end"
-PS1="$yellow!\!:$red [$blue\w$red] $red[$end\A|\u@\h$red]$yellow\n\$(git_prompt)$ $end"
+# PS1="\n$yellow!\!:$red [$white\w$red] $red[$end\A|\u@\h$red]$yellow\n\$(git_prompt)$ $end"
+PS1="\n$bold$yellow!\!:$red [$blue\w$red] $red[$end\A|\u@\h$red]$yellow\n$bold\$(git_prompt)$ $end"
