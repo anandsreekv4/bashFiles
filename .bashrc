@@ -1,5 +1,5 @@
 # Super.cshrc
-[ -f /tools/stbflow/iot/bashrc.iot ] && source /tools/stabflow/iot/bashrc.iot;
+[ -f /tools/stabflow/iot/bashrc.iot ] && source /tools/stabflow/iot/bashrc.iot;
 
 ########################################
 # General
