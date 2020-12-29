@@ -23,7 +23,7 @@
   alias src='source ~/.bashrc'
   alias grep="grep --color=auto"
   alias gg='grep -iPrn  "\!:1" \!:2' #comprehensive and faster grep
-  alias mailjob='echo "command_done in `pwd`" | mailx -S command_done_at__`pwd` ansn@cypress.com'
+  alias mailjob='echo "command done in `pwd`" | mailx ansn@cypress.com'
   alias hgrep="history | grep"
   ff() { find . -iname "$1"; }
   sf() { find `pwd` -type f -iname "$1" -print; }
@@ -72,10 +72,13 @@
 # Tools
 ########################################
   export CDSVER=INCISIVE15.20.042
-  export LM_LICENSE_FILE='
-  /proj/lic_vault/golden/lic_vault/tmald-india-prod-wan/license.dat'
-  export SNPSLMD_LICENSE_FILE='
-  /proj/lic_vault/golden/lic_vault/snpslmd-design-prod-wan/license.dat'
+  export LM_LICENSE_FILE='/proj/lic_vault/golden/lic_vault/tmald-india-prod-wan/license.dat'
+  export SNPSLMD_LICENSE_FILE='/proj/lic_vault/golden/lic_vault/snpslmd-design-prod-wan/license.dat'
+  unset SNPSLMD_LICENSE_FILE;
+  unset LM_LICENSE_FILE;
+  export SNPSLMD_LICENSE_FILE='/proj/lic_vault/golden/lic_vault/snpslmd-ap-cwan-ifx/license.dat'
+  export NOVAS_LICENSE='/tools/stabflow/lic_vault/snpslmd-na-cwan_ifx/license.dat /tools/stabflow/lic_vault/snpslmd-gwan-ifx/license.dat /tools/stabflow/lic_vault/snpslmd-aus-prod-wan/license.dat'
+  export NOVAS_BIN='/tools/stabflow/iot/bin'
 
   alias bjobs='bjobs -w'
   alias b128='bsub -I -R "rusage[mem=128000]"'
@@ -95,12 +98,15 @@
   alias gpsycdc='b128 make compile RTL_TOOL=spyglass SPYGLASS_GOALS=initial_rtl/cdc/clock_reset_integrity,initial_rtl/cdc/cdc_verify_struct 2>&1 | tee  gspycdc.log'
   alias open_spy='b144i gmake RTL_TOOL=spyglass configsum.gui &'
   alias gnc='bsub -I  gmake RTL_TOOL=ncsim compile COMP64=1 2>&1 | tee gnc.log'
+  alias gncm='bsub -I  gmake RTL_TOOL=ncsim compile COMP64=1 NO_MESSAGES=1 2>&1 | tee gnc.log'
+  alias gncmx='bsub -I  gmake RTL_TOOL=ncsim compile COMP64=1 NO_MESSAGES=1 XLM=1 2>&1 | tee gnc.log'
   alias gncbt='bsub -I  gmake RTL_TOOL=ncsim compile COMP64=1 STUB_BTFM=1 |& tee gnc.log'
   alias gncf='bsub -I  gmake RTL_TOOL=ncsim compile COMP64=1 NO_CORE_RECOMPILE=1 NO_RTL_RECOMPILE=1 && rm -rf tsmc28hpm_ncsim_INCISIVE15.20.042_64/cds.lib && gmake tsmc28hpm_ncsim_INCISIVE15.20.042_64/cds.lib 2>&1 | tee gnc.log'
-alias gne='bsub -I gmake RTL_TOOL=ncsim force-elab COMP64=1 |& tee gne.log'
+  alias gne='bsub -I gmake RTL_TOOL=ncsim force-elab COMP64=1 |& tee gne.log'
+  alias gnex='bsub -I gmake RTL_TOOL=ncsim force-elab COMP64=1 XLM=1 |& tee gne.log'
   alias gncf_bt='bsub -I  gmake RTL_TOOL=ncsim compile COMP64=1 NO_CORE_RECOMPILE=1 NO_RTL_RECOMPILE=1 STUB_BTFM=1 |& tee gnc.log'
   alias cverdi="b72i gmake compile RTL_TOOL=novas |& tee comp.verdi"
-  alias open_verdi='b128 -q normal gmake configsim.debussy RTL_TOOL=novas COMP64=1 &'
+  alias open_verdi='bsub -R "rusage[mem=32000]" -I -q normal_35 gmake configsim.debussy NOVAS_LICENSE="/tools/stabflow/lic_vault/snpslmd-na-cwan_ifx/license.dat /tools/stabflow/lic_vault/snpslmd-gwan-ifx/license.dat /tools/stabflow/lic_vault/snpslmd-aus-prod-wan/license.dat" NOVAS_BIN=/tools/stabflow/iot/bin RTL_TOOL=novas COMP64=1 &'
   alias open_verdi_play='b128 -q normal gmake configsim.debussy RTL_TOOL=novas COMP64=1 '
   alias open_simv='b128 -q normal gmake configsim.gui RTL_TOOL=ncsim COMP64=1 &'
   alias gmti="b128 gmake compile RTL_TOOL=mti MTI_USE_LATEST=1 COMP64=1 |& tee complog_mti_1.log "
@@ -129,8 +135,12 @@ alias gne='bsub -I gmake RTL_TOOL=ncsim force-elab COMP64=1 |& tee gne.log'
   export h2='/projects/CYW55560/users/ansn'
   export h2b='/projects/CYW55560'
   export h2a0='/projects/CYW55560/CYW55560YA0/'
+  export wb='/projects/WIFISS_H1/'
+  export w='/projects/WIFISS_H1/users/ansn'
   export svv='/projects/BCM4350/work/anand'
   export status='/projects/BCM4350_ext/work/ansn/status'
+  # move this later
+  export mj='/projects/CYW55560/users/mjch/test_area/synth/nic400/'
 
 
 ########################################
@@ -144,6 +154,10 @@ alias gne='bsub -I gmake RTL_TOOL=ncsim force-elab COMP64=1 |& tee gne.log'
 
   gf() {
     bsub -I -q normal gmake file_list FILELIST_PREFIX=../design/`basename $PWD` 2>&1 |  tee gf.log;
+  }
+
+  gfb() {
+    bsub -I -q normal gmake file_list_BE_check FILELIST_PREFIX=../design/`basename $PWD` 2>&1 |  tee gf.log;
   }
 
   memCp () {
